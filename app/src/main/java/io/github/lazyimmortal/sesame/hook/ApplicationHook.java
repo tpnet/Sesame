@@ -519,19 +519,19 @@ public class ApplicationHook implements IXposedHookLoadPackage {
                                     @Override
                                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                                         Object[] args = param.args;
-                                        Object object = args[15];
+//                                        Object object = args[15];
                                         Object[] recordArray = new Object[4];
                                         recordArray[0] = System.currentTimeMillis();
                                         recordArray[1] = args[0];
                                         recordArray[2] = args[4];
-                                        rpcHookMap.put(object, recordArray);
+                                        rpcHookMap.put(param.hashCode(), recordArray);
                                     }
 
                                     @SuppressLint("WakelockTimeout")
                                     @Override
                                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                                         Object object = param.args[15];
-                                        Object[] recordArray = rpcHookMap.remove(object);
+                                        Object[] recordArray = rpcHookMap.remove(param.hashCode());
                                         if (recordArray != null) {
                                             Log.debug("记录\n时间: " + recordArray[0] + "\n方法: " + recordArray[1] + "\n参数: " + recordArray[2] + "\n数据: " + recordArray[3] + "\n");
                                         } else {
